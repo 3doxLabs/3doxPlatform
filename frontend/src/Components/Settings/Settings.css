@@ -1,0 +1,93 @@
+.settings-wrapper {
+  display: flex;
+  height: 90vh;
+  /* background-color: aliceblue; */
+  gap: 20px;
+}
+
+.settings-left {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 30%;
+  align-items: flex-start;
+}
+
+.settings-right {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 70%;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  background-color: white;
+  /* background-color: darkblue; */
+}
+
+.profile-details {
+  display: flex;
+  height: fit-content;
+  padding: auto;
+  width: 100%;
+  border-bottom: 1px solid #d3d3d3;
+  padding: 20px;
+  font-weight: bold;
+  font-size: larger;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.name {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #d3d3d3;
+  padding: 20px;
+  gap: 25px;
+}
+
+.label {
+  font-weight: bold;
+  font-size: larger;
+}
+
+.name-input-div {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  gap: 10px;
+}
+
+.name-input {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.name-input input {
+  width: 100%;
+}
+
+.name-input span {
+  font-weight: bold;
+}
+
+.username-div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: fit-content;
+  border-bottom: 1px solid #d3d3d3;
+  padding: 20px;
+  gap: 25px;
+}
+
+.save-div {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: fit-content;
+  border-bottom: 1px solid #d3d3d3;
+  padding: 20px;
+  gap: 25px;
+}

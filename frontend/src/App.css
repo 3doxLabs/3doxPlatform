@@ -1,0 +1,101 @@
+/* .App {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+
+/* NAVBAR */
+.Navbar {
+  background-color: white !important;
+  height: fit-content;
+  color: inherit !important;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.Navbar a {
+  color: inherit !important;
+  font-weight: bold;
+}
+
+.nav-account {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.wallet-adapter-button.connect-btn {
+  display: flex;
+  background-color: #ff0000;
+  padding: 20px;
+  color: white;
+  font-weight: bold;
+  border-radius: 5px !important;
+  max-height: 1.8rem;
+  border: none;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+.wallet-adapter-button.connect-btn:hover {
+  color: white;
+  background-color: #ca0000 !important;
+}
+
+.account-btn {
+  display: flex;
+  background-color: #ff0000 !important;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: black;
+  border-radius: 5px !important;
+  height: 2.1rem;
+  border: none;
+  padding: 10px;
+}
+
+.account-tab {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.account-img {
+  display: flex;
+  border-radius: 5px;
+  max-height: 30px;
+}
+
+.account-img-div {
+}
+
+.account-info-div {
+  display: flex;
+  flex-direction: column;
+  font-size: small;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.notifications-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: larger;
+}
+
+.notifications-div .notifications {
+  cursor: pointer;
+}
+
+.notifications-div .messages {
+  cursor: pointer;
+}
