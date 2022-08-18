@@ -6,15 +6,17 @@ const app = express();
 
 const socketServer = require("http").createServer(app);
 const io = require("socket.io")(socketServer);
+
 const crypto = require("crypto");
 const path = require("path");
 const cors = require("cors");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
-const helmet = require("helmet");
-const { authenticate } = require("./middleware/authenticate");
-const { updateUser, getUser } = require("./controllers/user");
 const sanitize = require("mongo-sanitize");
+const helmet = require("helmet");
+
+const { authenticate } = require("./middleware/authenticate");
+// const { updateUser, getUser } = require("./SocketControllers/user");
 
 // Middleware Config
 app.set("socketio", io);
@@ -70,13 +72,11 @@ if (process.env.NODE_ENV === "production") {
 
 // Routes
 const login = require("./routes/login");
+const user = require("./routes/user");
 
 // Use Routes
-app.use("/api/user", login);
-
-socketServer.listen(PORT, () => {
-  console.log("Server running on port:", PORT);
-});
+app.use("/api/auth", login);
+app.use("/api/user", user);
 
 io.on("connect", (socket) => {
   console.log(socket.conn.server.clientsCount);
@@ -86,20 +86,11 @@ io.on("connect", (socket) => {
     console.log(e);
   }
 
-  socket.on("/api/user/update", async (data) => {
-    authenticate(socket).then((account) => {
-      sanitize(data);
-      sanitize(account);
-      updateUser(data, account, socket);
-    });
-  });
-
-  socket.on("/api/user/find", async (data) => {
-    sanitize(data);
-    getUser(data, socket);
-  });
-
   socket.on("disconnect", () => {
     console.log("disconnected");
   });
+});
+
+socketServer.listen(PORT, () => {
+  console.log("Server running on port:", PORT);
 });

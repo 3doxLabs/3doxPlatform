@@ -6,6 +6,8 @@ import defaultPfp from "../../images/user.png";
 import { FaRegHeart } from "react-icons/fa";
 import Fab from "@mui/material/Fab";
 import { FiMapPin } from "react-icons/fi";
+import WatchLaterIcon from "@mui/icons-material/WatchLater";
+import PinDropIcon from "@mui/icons-material/PinDrop";
 import { BiMessageSquareAdd } from "react-icons/bi";
 import Rating from "@mui/material/Rating";
 import Tabs from "@mui/material/Tabs";
@@ -14,25 +16,48 @@ import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
 import Card from "@mui/material/Card";
+import axios from "axios";
 import "./Profile.css";
 
 export default function FindWork() {
+  const { id } = useParams();
   const { user, setUser, socket } = useContext(AppContext);
   const [value, setValue] = useState<number | null>(4.5);
   const [tabValue, setTabValue] = useState("one");
-  const { id } = useParams();
-
-  const [account, setAccount] = useState({});
+  const [account, setAccount] = useState<any>({
+    username: null,
+    firstName: null,
+    lastName: null,
+    expertise: null,
+    country: null,
+    timezone: null,
+    address: null,
+    avatar: null,
+    rating: 0,
+    karma: 0,
+    reviews: 0,
+    experience: [],
+    skills: [],
+    earned: 0,
+    spent: 0,
+  });
 
   useEffect(() => {
-    setTimeout(() => {
-      socket.current.emit("/api/user/find", id);
-
-      socket.current.on("/user/find", (accountData: any) => {
-        setAccount(accountData);
+    axios
+      .get(`${process.env.REACT_APP_BASE_URL}/api/user/${id}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setAccount(res.data);
+      })
+      .catch((e) => {
+        console.log(e);
       });
-    }, 500);
-  }, [socket]);
+  }, []);
+
+  useEffect(() => {
+    console.log(account);
+  }, [account]);
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setTabValue(newValue);
@@ -64,35 +89,32 @@ export default function FindWork() {
             </div>
 
             <div className="profile-left-bottom-experience">
-              {/*  New Job */}
-              <div className="profile-left-bottom-experience-job">
-                <div className="profile-left-bottom-experience-company">
-                  <h4>Facebook</h4>
-                </div>
+              {account.experience.lenght > 0 ? (
+                account.experience.map((job: any) => {
+                  <div className="profile-left-bottom-experience-job">
+                    <div className="profile-left-bottom-experience-company">
+                      <h4>{job.company}</h4>
+                    </div>
 
-                <div className="profile-left-bottom-experience-job-position">
-                  <span>Backend Engineer</span>
-                </div>
+                    <div className="profile-left-bottom-experience-job-position">
+                      <span>{job.position}</span>
+                    </div>
 
-                <div className="profile-left-bottom-experience-period">
-                  <span>2015 - 2020</span>
-                </div>
-              </div>
-
-              {/*  New Job */}
-              <div className="profile-left-bottom-experience-job">
-                <div className="profile-left-bottom-experience-company">
-                  <h4>Blockstream</h4>
-                </div>
-
-                <div className="profile-left-bottom-experience-job-position">
-                  <span>Blockchain Engineer</span>
-                </div>
-
-                <div className="profile-left-bottom-experience-period">
-                  <span>2015 - 2020</span>
-                </div>
-              </div>
+                    <div className="profile-left-bottom-experience-period">
+                      <span>
+                        {job.from} - {job.to}
+                      </span>
+                    </div>
+                  </div>;
+                })
+              ) : (
+                <>
+                  <span>
+                    This user hasn't published their previous professional
+                    experience.
+                  </span>
+                </>
+              )}
             </div>
 
             <div className="profile-left-bottom-label">
@@ -122,14 +144,67 @@ export default function FindWork() {
                 {/* Name & Location */}
                 <div className="user-details">
                   <div className="username-title">
-                    <span className="username">Jason Rendall</span>
-                    <span className="profession">Smart Contract Developer</span>
+                    <span className="username">
+                      {account.username ? (
+                        account.username === account.address ? (
+                          <>
+                            {account.username.substring(0, 4)}...
+                            {account.username.substring(
+                              account.username.length - 4
+                            )}
+                          </>
+                        ) : (
+                          <>{account.username}</>
+                        )
+                      ) : (
+                        "Unclaimed Account"
+                      )}
+                    </span>
+
+                    {account.expertise ? (
+                      <>
+                        <span className="profession">{account.expertise}</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="profession"></span>
+                      </>
+                    )}
                   </div>
 
                   <div className="user-location">
-                    <span>
-                      <FiMapPin /> Los Angeles, CA
-                    </span>
+                    {account.country ? (
+                      <>
+                        <div>
+                          <PinDropIcon />
+                          {account.country.toUpperCase()}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="location-item">
+                          <PinDropIcon />
+                          <span>Undisclosed</span>
+                        </div>
+                      </>
+                    )}
+
+                    {account.timezone ? (
+                      <>
+                        <div>
+                          <WatchLaterIcon />
+                          Time Zone {account.timezone}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="location-item">
+                          <WatchLaterIcon />
+
+                          <span>Undisclosed</span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
@@ -137,17 +212,32 @@ export default function FindWork() {
                 <div className="user-rating">
                   <div className="user-client-rating">
                     <span className="rating-text">
-                      Rating: {value} (3 reviews)
+                      {account.rating > 0 ? (
+                        <>
+                          Rating: {account.rating} ({account.reviews})
+                        </>
+                      ) : (
+                        <>Rating: {account.rating || "No reviews"}</>
+                      )}
                     </span>
+
                     <div>
                       <Rating
                         name="read-only"
-                        value={value}
-                        precision={0.5}
+                        value={account.rating}
+                        precision={0.1}
                         readOnly
-                        size="small"
+                        size="medium"
                       />
                     </div>
+                  </div>
+
+                  <div className="karma">
+                    {account.karma ? (
+                      <>Karma: {account.karma}</>
+                    ) : (
+                      <>Karma: 0</>
+                    )}
                   </div>
                 </div>
 
@@ -199,7 +289,7 @@ export default function FindWork() {
               </Tabs>
             </Box>
 
-            <Card sx={{ minWidth: "100%", borderRadius: "20px" }}>
+            <Card sx={{ minWidth: "100%", borderRadius: "5px" }}>
               <div className="completed-job">
                 <div className="job-title">
                   <h5>Build a Smart Contract on Solana</h5>
@@ -249,7 +339,7 @@ export default function FindWork() {
               </div>
             </Card>
 
-            <Card sx={{ minWidth: "100%", borderRadius: "20px" }}>
+            <Card sx={{ minWidth: "100%", borderRadius: "5px" }}>
               <div className="completed-job">
                 <div className="job-title">
                   <h5>Create NFT Mint Site</h5>

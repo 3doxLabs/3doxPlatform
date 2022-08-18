@@ -21,6 +21,18 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
 
+    expertise: {
+      type: String,
+    },
+
+    country: {
+      type: String,
+    },
+
+    timezone: {
+      type: String,
+    },
+
     address: {
       trim: true,
       type: String,
@@ -44,6 +56,10 @@ const userSchema = new mongoose.Schema(
     reviews: {
       type: Number,
       required: true,
+    },
+
+    karma: {
+      type: Number,
     },
 
     experience: [

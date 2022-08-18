@@ -6,16 +6,22 @@ const socketUrl = process.env.REACT_APP_SOCKET_URL;
 
 const AppState = (props) => {
   const [user, setUser] = useState({
-    username: "",
-    address: "",
-    avatar: "",
-    balance: null,
-    rating: null,
-    reviews: null,
+    username: null,
+    firstName: null,
+    lastName: null,
+    expertise: null,
+    country: null,
+    timezone: null,
+    address: null,
+    avatar: null,
+    balance: 0,
+    rating: 0,
+    karma: 0,
+    reviews: 0,
     experience: [],
     skills: [],
-    earned: null,
-    spent: null,
+    earned: 0,
+    spent: 0,
   });
 
   let socket = useRef(null);
@@ -23,7 +29,7 @@ const AppState = (props) => {
   useEffect(() => {
     socket.current = io(socketUrl, {
       autoConnect: true,
-      upgrade: false,
+      upgrade: true,
       transports: ["websocket"],
       withCredentials: true,
       cookie: true,

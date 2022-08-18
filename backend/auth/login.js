@@ -38,12 +38,15 @@ exports.login = async (req, res) => {
       return res.status(404).send({ error: "user not found" });
     }
 
-    let user = await User.findOne({ username: sanitize(req.body.address) });
+    let user = await User.findOne({ address: sanitize(req.body.address) });
 
     if (!user) {
       user = new User({
         username: pk.toString(),
         address,
+        firstName: "",
+        lastName: "",
+        karma: 0,
         avatar: "",
         balance: 0.0,
         rating: 0.0,
@@ -70,16 +73,19 @@ exports.login = async (req, res) => {
           return res.status(400).send({ error: "InvalidCredentials" });
         }
 
-        res.cookie(`b021e898ea72fa6c30e767fcf2f9f33e`, token, {
+        res.cookie(process.env.TOKEN_PSUEDO_NAME, token, {
           secure: process.env.NODE_ENV !== "development",
         });
 
         return res.status(200).send({
           username: user.username,
           address: user.address,
+          firstName: user.firstName,
+          lastName: user.lastName,
           avatar: user.avatar,
           balance: user.balance,
           rating: user.rating,
+          karma: user.karma,
           reviews: user.reviews,
           experience: user.experience,
           skills: user.skills,
@@ -96,9 +102,9 @@ exports.login = async (req, res) => {
 
 exports.logout = async (req, res) => {
   try {
-    console.log(req.body);
-    // res.clearCookie(process.env.TOKEN_PSUEDO_NAME);
-    return res.send("clear");
+    res.clearCookie(process.env.TOKEN_PSUEDO_NAME);
+
+    return res.status(200).send({ message: "disconnected" });
   } catch (e) {
     console.log(e);
   }

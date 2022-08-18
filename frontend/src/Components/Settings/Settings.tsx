@@ -1,10 +1,10 @@
 import { Container } from "react-bootstrap";
 import AppContext from "../../context/context";
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import "./Settings.css";
 
-import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Button from "@mui/material/Button";
@@ -14,28 +14,58 @@ import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import InboxIcon from "@mui/icons-material/Inbox";
 import DraftsIcon from "@mui/icons-material/Drafts";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import axios from "axios";
 
 export default function Settings() {
+  const navigate = useNavigate();
   const { user, setUser, socket } = useContext(AppContext);
-  const [username, setUsername] = useState(user.username);
+  const [updatedUser, setUpdatedUser] = useState({
+    username: user.username,
+    firstName: user.firstName,
+    lastName: user.lastName,
+  });
 
-  const handleUsernameInput = (e: any) => {
-    setUsername(e.target.value);
+  const handleUserChange = (e: any) => {
+    setUpdatedUser({ ...updatedUser, [e.target.name]: e.target.value });
+    console.log(updatedUser);
   };
 
   const handleSave = () => {
-    if (username.length > 15) {
+    if (updatedUser.username.length > 15) {
       return console.log("Username must be less than 15 characters");
     }
 
+    axios
+      .post(`${process.env.REACT_APP_BASE_URL}/api/user/update`, updatedUser, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
     let data = {
-      username,
+      updatedUser,
     };
 
-    socket.current.emit("/api/user/update", data);
-
-    console.log(username);
+    console.log(updatedUser);
   };
+
+  useEffect(() => {
+    if (socket.current) {
+      console.log(socket.current);
+    }
+  }, [socket.current]);
+
+  useEffect(() => {
+    if (!user.username) {
+      navigate("/find-work");
+    }
+  });
 
   return (
     <Container>
@@ -81,13 +111,25 @@ export default function Settings() {
 
             <div className="name-input-div">
               <div className="name-input">
-                <span>First Name</span>
-                <input disabled type="text" />
+                <TextField
+                  // error={username.length > 15 ? true : false}
+                  id="outlined-baseic"
+                  label="First Name"
+                  name="firstName"
+                  defaultValue=""
+                  onChange={(e) => handleUserChange(e)}
+                />
               </div>
 
               <div className="name-input">
-                <span>Last Name</span>
-                <input disabled type="text" />
+                <TextField
+                  // error={username.length > 15 ? true : false}
+                  id="outlined-baseic"
+                  label="Last Name"
+                  defaultValue=""
+                  name="lastName"
+                  onChange={(e) => handleUserChange(e)}
+                />
               </div>
             </div>
           </div>
@@ -95,7 +137,18 @@ export default function Settings() {
           <div className="username-div">
             <span className="label">Username</span>
             <div>
-              <input onChange={(e) => handleUsernameInput(e)} type="text" />
+              <TextField
+                error={
+                  updatedUser.username && updatedUser.username.length > 15
+                    ? true
+                    : false
+                }
+                id="outlined-baseic"
+                label="Username"
+                name="username"
+                defaultValue={user.username}
+                onChange={(e) => handleUserChange(e)}
+              />
             </div>
           </div>
 

@@ -12,9 +12,12 @@
 .profile-left {
   display: flex;
   flex: 25%;
-  /* background-color: #00ffa3; */
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
   flex-direction: column;
   gap: 20px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
 .profile-left-top {
@@ -46,13 +49,14 @@
   flex-direction: column;
   gap: 20px;
   padding: 20px 0 20px 0;
+  min-height: 30%;
 }
 
 .profile-left-bottom-label {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #a3a3a3;
 }
 
-.profile-left-bottom-experience-profession {
+.profile-left-bottom-experience-job {
   display: flex;
   font-weight: 500;
 }
@@ -61,6 +65,7 @@
   display: flex;
   flex-direction: column;
   padding: 10px 0 10px 0;
+  gap: 5px;
 }
 
 .profile-left-bottom-skills-item {
@@ -72,7 +77,6 @@
 .profile-right {
   display: flex;
   flex: 75%;
-  /* background-color: gray; */
   flex-direction: column;
   gap: 15px;
 }
@@ -80,6 +84,10 @@
 .profile-right-top {
   display: flex;
   flex: 40%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
 /* Upper Left of Right Profile  */
@@ -104,6 +112,7 @@
   align-items: flex-start;
   width: 100%;
   gap: 50px;
+  /* background-color: #ff0000; */
 }
 
 .profile-right-top-left .user-info .username {
@@ -115,11 +124,21 @@
 
 .profile-right-top-left .user-location {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   font-size: small;
   font-weight: bold;
   height: fit-content;
+  width: fit-content;
   padding: 10px;
+  gap: 10px;
+  color: #a3a3a3;
+}
+
+.user-location .location-item {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
 }
 
 .profile-right-top-left .job-position {
@@ -138,6 +157,18 @@
 .profile-right-top-left .user-info .user-rating .rating-text {
   display: flex;
   font-size: 14px;
+  font-weight: bold;
+}
+
+.user-rating {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.karma {
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .profile-right-top-left .user-info .contact {
@@ -245,8 +276,17 @@
   gap: 5px;
 }
 
-@media only screen and (max-width: 760px) {
+@media only screen and (max-width: 980px) {
   .profile-wrapper {
     flex-direction: column;
+  }
+
+  .profile-right-top {
+    flex-direction: column;
+  }
+
+  .user-location {
+    width: fit-content;
+    flex-direction: column !important;
   }
 }

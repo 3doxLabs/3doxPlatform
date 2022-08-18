@@ -42,6 +42,7 @@ export default function NavBar() {
   const getSignature = async (pk: any) => {
     try {
       if (!signMessage) return;
+      setAnchorEl(null);
 
       const message = new TextEncoder().encode(
         `Login as ${publicKey?.toString()}`
@@ -51,9 +52,9 @@ export default function NavBar() {
 
       if (!signature) return await disconnect();
 
-      await axios
+      axios
         .post(
-          "http://localhost:5000/api/user/login",
+          `${process.env.REACT_APP_BASE_URL}/api/auth/login`,
           {
             signature,
             address: pk.toString(),
@@ -62,18 +63,7 @@ export default function NavBar() {
         )
         .then((res) => {
           socket.current.disconnect();
-          setUser({
-            username: res.data.username,
-            address: res.data.address,
-            avatar: res.data.avatar,
-            balance: res.data.balance,
-            rating: res.data.rating,
-            reviews: res.data.reviews,
-            experience: res.data.experience,
-            skills: res.data.skills,
-            earned: res.data.earned,
-            spent: res.data.spent,
-          });
+          setUser(res.data);
           return socket.current.connect();
         })
         .catch(() => {
@@ -88,16 +78,44 @@ export default function NavBar() {
   };
 
   const logOut = async () => {
-    await axios.post("http://localhost:5000/api/user/logout", "logout", {
-      withCredentials: true,
-    });
-    await disconnect();
-    await socket.current.disconnect();
-    await socket.current.connect();
-    setUser({
-      username: "",
-      address: "",
-    });
+    setAnchorEl(null);
+
+    await axios
+      .post(
+        `${process.env.REACT_APP_BASE_URL}/api/auth/logout`,
+        {
+          message: "logout",
+        },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log(res);
+
+        setUser({
+          username: null,
+          firstName: null,
+          lastName: null,
+          expertise: null,
+          country: null,
+          timezone: null,
+          address: null,
+          avatar: null,
+          balance: 0,
+          rating: 0,
+          karma: 0,
+          reviews: 0,
+          experience: [],
+          skills: [],
+          earned: 0,
+          spent: 0,
+        });
+
+        socket.current.disconnect();
+        disconnect();
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   useEffect(() => {
@@ -169,7 +187,11 @@ export default function NavBar() {
                       onClose={handleClose}
                       TransitionComponent={Fade}
                     >
-                      <MenuItem component={Link} to={`/u/${user.address}`}>
+                      <MenuItem
+                        onClick={handleClose}
+                        component={Link}
+                        to={`/u/${user.address}`}
+                      >
                         Profile
                       </MenuItem>
 
@@ -179,7 +201,11 @@ export default function NavBar() {
 
                       <Divider />
 
-                      <MenuItem component={Link} to={`/settings`}>
+                      <MenuItem
+                        onClick={handleClose}
+                        component={Link}
+                        to={`/settings`}
+                      >
                         <ListItemIcon>
                           <Settings fontSize="small" />
                         </ListItemIcon>
@@ -198,17 +224,25 @@ export default function NavBar() {
                   <div className="account-info-div">
                     {/* check if username is defaulted to wallet address */}
                     <span className="username">
-                      {user.username === user.address ? (
+                      {user.username ? (
                         <>
-                          {user.username.substring(0, 4)}...
-                          {user.username.substring(user.username.length - 4)}
+                          {user.username === user.address ? (
+                            <>
+                              {user.username.substring(0, 4)}...
+                              {user.username.substring(
+                                user.username.length - 4
+                              )}
+                            </>
+                          ) : (
+                            <>{user.username}</>
+                          )}
                         </>
                       ) : (
-                        <>{user.username}</>
+                        <></>
                       )}
                     </span>
 
-                    <span>0.00 SOL</span>
+                    <span>{user.balance.toFixed(2)} SOL</span>
                   </div>
                 </div>
               </>
