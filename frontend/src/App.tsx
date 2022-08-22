@@ -20,12 +20,7 @@ import Profile from "./Components/Profile/Profile";
 import Footer from "./Components/Footer/Footer";
 import Settings from "./Components/Settings/Settings";
 
-import Box from "@mui/material/Box";
-import BottomNavigation from "@mui/material/BottomNavigation";
-import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import RestoreIcon from "@mui/icons-material/Restore";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { SnackbarProvider, VariantType, useSnackbar } from "notistack";
 
 require("./App.css");
 require("@solana/wallet-adapter-react-ui/styles.css");
@@ -58,7 +53,9 @@ const Context: FC<{ children: ReactNode }> = ({ children }) => {
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <AppState>
-          <WalletModalProvider>{children}</WalletModalProvider>
+          <SnackbarProvider maxSnack={3}>
+            <WalletModalProvider>{children}</WalletModalProvider>
+          </SnackbarProvider>
         </AppState>
       </WalletProvider>
     </ConnectionProvider>

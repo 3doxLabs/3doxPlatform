@@ -2,38 +2,59 @@ import { Container } from "react-bootstrap";
 import AppContext from "../../context/context";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import "./Settings.css";
+import { useSnackbar } from "notistack";
+import { countries } from "./countries";
+import { timezones } from "./timezones";
 
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Button from "@mui/material/Button";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
-import InboxIcon from "@mui/icons-material/Inbox";
-import DraftsIcon from "@mui/icons-material/Drafts";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+
 import axios from "axios";
+import "./Settings.css";
 
 export default function Settings() {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const { user, setUser, socket } = useContext(AppContext);
+  const [isUsernameError, setIsUsernameError] = useState(false);
+  const [country, setCountry] = useState(user.country);
+  const [timezone, setTimezone] = useState(user.timezone);
+
   const [updatedUser, setUpdatedUser] = useState({
     username: user.username,
     firstName: user.firstName,
     lastName: user.lastName,
+    country: user.country,
+    timezone: user.timezone,
   });
 
   const handleUserChange = (e: any) => {
     setUpdatedUser({ ...updatedUser, [e.target.name]: e.target.value });
-    console.log(updatedUser);
+
+    if (e.target.name === "username") {
+      setIsUsernameError(false);
+    }
+
+    if (e.target.name === "country") {
+      setCountry(e.target.value);
+    }
+
+    if (e.target.name === "timezone") {
+      setTimezone(e.target.value);
+    }
   };
 
   const handleSave = () => {
-    if (updatedUser.username.length > 15) {
+    if (
+      updatedUser.username.length > 15 &&
+      updatedUser.username !== user.address
+    ) {
       return console.log("Username must be less than 15 characters");
     }
 
@@ -42,25 +63,24 @@ export default function Settings() {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res);
+        setUser(res.data);
+
+        // Display notification
+        enqueueSnackbar("Account updated!", {
+          variant: "success",
+        });
       })
       .catch((e) => {
-        console.log(e);
+        if (e.response.status === 409) {
+          setIsUsernameError(true);
+
+          // Display error notification
+          enqueueSnackbar(e.response.data.message, { variant: "error" });
+        }
       });
-
-    let data = {
-      updatedUser,
-    };
-
-    console.log(updatedUser);
   };
 
-  useEffect(() => {
-    if (socket.current) {
-      console.log(socket.current);
-    }
-  }, [socket.current]);
-
+  // Reroute logged out users
   useEffect(() => {
     if (!user.username) {
       navigate("/find-work");
@@ -116,7 +136,7 @@ export default function Settings() {
                   id="outlined-baseic"
                   label="First Name"
                   name="firstName"
-                  defaultValue=""
+                  defaultValue={user.firstName}
                   onChange={(e) => handleUserChange(e)}
                 />
               </div>
@@ -126,8 +146,8 @@ export default function Settings() {
                   // error={username.length > 15 ? true : false}
                   id="outlined-baseic"
                   label="Last Name"
-                  defaultValue=""
                   name="lastName"
+                  defaultValue={user.lastName}
                   onChange={(e) => handleUserChange(e)}
                 />
               </div>
@@ -138,17 +158,53 @@ export default function Settings() {
             <span className="label">Username</span>
             <div>
               <TextField
-                error={
-                  updatedUser.username && updatedUser.username.length > 15
-                    ? true
-                    : false
-                }
+                error={isUsernameError}
                 id="outlined-baseic"
                 label="Username"
                 name="username"
                 defaultValue={user.username}
                 onChange={(e) => handleUserChange(e)}
               />
+            </div>
+          </div>
+
+          <div className="username-div">
+            <span className="label">Location</span>
+
+            <div className="time-location">
+              <TextField
+                id="outlined-select-currency"
+                select
+                label="Select"
+                name="country"
+                value={country}
+                defaultValue={country}
+                onChange={handleUserChange}
+                helperText="Please select your country"
+              >
+                {countries.map((option) => (
+                  <MenuItem key={option.label} value={option.label}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+
+              <TextField
+                id="outlined-select-currency"
+                select
+                label="Select"
+                name="timezone"
+                value={timezone}
+                defaultValue={timezone}
+                onChange={handleUserChange}
+                helperText="Please select your timezone"
+              >
+                {timezones.map((option) => (
+                  <MenuItem key={option.zone} value={option.gmt}>
+                    {option.zone}
+                  </MenuItem>
+                ))}
+              </TextField>
             </div>
           </div>
 

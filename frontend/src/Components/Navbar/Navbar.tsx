@@ -93,12 +93,12 @@ export default function NavBar() {
 
         setUser({
           username: null,
+          address: null,
           firstName: null,
           lastName: null,
           expertise: null,
           country: null,
           timezone: null,
-          address: null,
           avatar: null,
           balance: 0,
           rating: 0,
@@ -190,7 +190,7 @@ export default function NavBar() {
                       <MenuItem
                         onClick={handleClose}
                         component={Link}
-                        to={`/u/${user.address}`}
+                        to={user.address ? `/u/${user.address}` : "/"}
                       >
                         Profile
                       </MenuItem>

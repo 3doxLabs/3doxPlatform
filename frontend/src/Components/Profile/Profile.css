@@ -1,5 +1,4 @@
 /* Profile */
-
 .profile-wrapper {
   display: flex;
   /* background-color: aliceblue; */
@@ -56,21 +55,11 @@
   border-bottom: 1px solid #a3a3a3;
 }
 
-.profile-left-bottom-experience-job {
-  display: flex;
-  font-weight: 500;
-}
-
 .profile-left-bottom-skills {
   display: flex;
   flex-direction: column;
   padding: 10px 0 10px 0;
   gap: 5px;
-}
-
-.profile-left-bottom-skills-item {
-  display: flex;
-  font-size: small;
 }
 
 /* Right Profile */
@@ -148,24 +137,6 @@
   font-weight: bold;
 }
 
-.profile-right-top-left .user-info .user-rating .user-client-rating {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.profile-right-top-left .user-info .user-rating .rating-text {
-  display: flex;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.user-rating {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 .karma {
   font-size: 14px;
   font-weight: bold;
@@ -177,18 +148,6 @@
   align-items: center;
   width: 100%;
   gap: 50px;
-}
-
-.profile-right-top-left .user-info .invite {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  cursor: pointer;
-  gap: 5px;
-  /* background-color: #1d2531; */
-  padding: 10px;
-  border-radius: 5px;
-  color: white;
 }
 
 .profile-right-top-left .user-info .report {
@@ -223,57 +182,6 @@
   flex-direction: column;
   gap: 10px;
   /* background-color: orange; */
-}
-
-.profile-right-bottom .completed-job {
-  display: flex;
-  width: 100%;
-  padding: 30px;
-  height: fit-content;
-  gap: 10px;
-  /* background-color: #00ffa3; */
-}
-
-.profile-right-bottom .completed-job .job-title {
-  display: flex;
-  font-weight: bold;
-  color: #1d2531;
-}
-
-.completed-job {
-  display: flex;
-  flex-direction: column;
-}
-
-.completed-job .job-date {
-  display: flex;
-  font-size: small;
-}
-
-.completed-job .job-pay {
-  display: flex;
-  /* font-size: small; */
-  gap: 20px;
-}
-
-.completed-job .job-pay .job-rate {
-  display: flex;
-  color: #ff0000;
-  font-weight: bold;
-}
-
-.completed-job .job-review {
-  display: flex;
-  width: fit-content;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.completed-job .job-review .client-review-message {
-  display: flex;
-  flex-direction: column;
-  font-family: Arial, Helvetica, sans-serif;
-  gap: 5px;
 }
 
 @media only screen and (max-width: 980px) {

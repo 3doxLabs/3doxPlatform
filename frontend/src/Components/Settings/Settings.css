@@ -1,14 +1,13 @@
 .settings-wrapper {
   display: flex;
-  height: 90vh;
-  /* background-color: aliceblue; */
+  height: fit-content;
   gap: 20px;
 }
 
 .settings-left {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: fit-content;
   flex: 30%;
   align-items: flex-start;
 }
@@ -16,7 +15,7 @@
 .settings-right {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: fit-content;
   flex: 70%;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
   background-color: white;
@@ -80,6 +79,11 @@
   border-bottom: 1px solid #d3d3d3;
   padding: 20px;
   gap: 25px;
+}
+
+.time-location {
+  display: flex;
+  gap: 10px;
 }
 
 .save-div {

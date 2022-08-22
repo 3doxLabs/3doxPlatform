@@ -1,0 +1,17 @@
+.user-rating {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-client-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.rating-text {
+  display: flex;
+  font-size: 14px;
+  font-weight: bold;
+}

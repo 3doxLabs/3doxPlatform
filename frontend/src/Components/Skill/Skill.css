@@ -1,0 +1,9 @@
+.skill-item {
+  display: flex;
+  font-size: small;
+  width: fit-content;
+  padding: 5px;
+  border-radius: 5px;
+  font-weight: bold;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}

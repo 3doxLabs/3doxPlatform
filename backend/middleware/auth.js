@@ -20,7 +20,7 @@ const auth = (req, res, next) => {
       jwt.sign(
         {
           // set the payload as user's uuid
-          username: req.user.username,
+          id: req.user.id,
         },
         process.env.jwtsecret,
         //  set expiration to 12 hour

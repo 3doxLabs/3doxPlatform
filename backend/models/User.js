@@ -71,11 +71,7 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
-    skills: [
-      {
-        skill: String,
-      },
-    ],
+    skills: [String],
 
     earned: {
       type: Number,

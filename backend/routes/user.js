@@ -6,7 +6,7 @@ const { findUser, updateUser } = require("../controllers/user");
 // @route   GET api/user/:id
 // @desc    returns the specified user
 // @access  Public
-router.get("/:id", findUser);
+router.get("/:address", findUser);
 
 // @route   POST api/user/update
 // @desc    updates the specified user

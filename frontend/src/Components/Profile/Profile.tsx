@@ -2,21 +2,23 @@ import AppContext from "../../context/context";
 import { useContext, useEffect, useState, SyntheticEvent } from "react";
 import { useParams } from "react-router-dom";
 import { Container } from "react-bootstrap";
-import defaultPfp from "../../images/user.png";
 import { FaRegHeart } from "react-icons/fa";
-import Fab from "@mui/material/Fab";
-import { FiMapPin } from "react-icons/fi";
+
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
 import PinDropIcon from "@mui/icons-material/PinDrop";
-import { BiMessageSquareAdd } from "react-icons/bi";
-import Rating from "@mui/material/Rating";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
-import Chip from "@mui/material/Chip";
-import Card from "@mui/material/Card";
 import axios from "axios";
+
+import UserRating from "../UserRating/UserRating";
+import Review from "../Review/Review";
+import Experience from "../Experience/Experience";
+import InviteToJob from "../InviteToJob/InviteToJob";
+import DisplayName from "../DisplayName/DisplayName";
+import Skill from "../Skill/Skill";
+
+import defaultPfp from "../../images/user.png";
 import "./Profile.css";
 
 export default function FindWork() {
@@ -55,23 +57,9 @@ export default function FindWork() {
       });
   }, []);
 
-  useEffect(() => {
-    console.log(account);
-  }, [account]);
-
   const handleChange = (event: SyntheticEvent, newValue: string) => {
     setTabValue(newValue);
   };
-
-  // future use case for annunciation of names
-  const bull = (
-    <Box
-      component="span"
-      sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
-    >
-      •
-    </Box>
-  );
 
   return (
     <Container>
@@ -89,32 +77,7 @@ export default function FindWork() {
             </div>
 
             <div className="profile-left-bottom-experience">
-              {account.experience.lenght > 0 ? (
-                account.experience.map((job: any) => {
-                  <div className="profile-left-bottom-experience-job">
-                    <div className="profile-left-bottom-experience-company">
-                      <h4>{job.company}</h4>
-                    </div>
-
-                    <div className="profile-left-bottom-experience-job-position">
-                      <span>{job.position}</span>
-                    </div>
-
-                    <div className="profile-left-bottom-experience-period">
-                      <span>
-                        {job.from} - {job.to}
-                      </span>
-                    </div>
-                  </div>;
-                })
-              ) : (
-                <>
-                  <span>
-                    This user hasn't published their previous professional
-                    experience.
-                  </span>
-                </>
-              )}
+              <Experience experience={account.experience} />
             </div>
 
             <div className="profile-left-bottom-label">
@@ -122,17 +85,9 @@ export default function FindWork() {
             </div>
 
             <div className="profile-left-bottom-skills">
-              <div className="profile-left-bottom-skills-item">
-                <span>Python</span>
-              </div>
-
-              <div className="profile-left-bottom-skills-item">
-                <span>Javascript</span>
-              </div>
-
-              <div className="profile-left-bottom-skills-item">
-                <span>C++</span>
-              </div>
+              {account.skills.map((skill: string, i: number) => (
+                <Skill key={i} skill={skill} />
+              ))}
             </div>
           </div>
         </div>
@@ -144,138 +99,78 @@ export default function FindWork() {
                 {/* Name & Location */}
                 <div className="user-details">
                   <div className="username-title">
+                    {/* Account username / address */}
+
                     <span className="username">
-                      {account.username ? (
-                        account.username === account.address ? (
-                          <>
-                            {account.username.substring(0, 4)}...
-                            {account.username.substring(
-                              account.username.length - 4
-                            )}
-                          </>
-                        ) : (
-                          <>{account.username}</>
-                        )
-                      ) : (
-                        "Unclaimed Account"
-                      )}
+                      <DisplayName
+                        displayName={account.username || undefined}
+                      />
                     </span>
 
-                    {account.expertise ? (
-                      <>
-                        <span className="profession">{account.expertise}</span>
-                      </>
-                    ) : (
-                      <>
-                        <span className="profession"></span>
-                      </>
-                    )}
+                    <a
+                      style={{ color: "red", fontWeight: "bold" }}
+                      href={`https://solscan.io/account/${id}`}
+                      target="_blank"
+                    >
+                      {id ? (
+                        <>
+                          {id.substring(0, 4)}...
+                          {id.substring(id.length - 4)}
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                    </a>
+
+                    {/* User expertise if provided */}
+                    <span className="profession">
+                      {account.expertise || undefined}
+                    </span>
                   </div>
 
+                  {/* User location */}
                   <div className="user-location">
-                    {account.country ? (
-                      <>
-                        <div>
-                          <PinDropIcon />
-                          {account.country.toUpperCase()}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="location-item">
-                          <PinDropIcon />
-                          <span>Undisclosed</span>
-                        </div>
-                      </>
-                    )}
+                    <div>
+                      <PinDropIcon />
+                      {account.country || "Undisclosed"}
+                    </div>
 
-                    {account.timezone ? (
-                      <>
-                        <div>
-                          <WatchLaterIcon />
-                          Time Zone {account.timezone}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="location-item">
-                          <WatchLaterIcon />
-
-                          <span>Undisclosed</span>
-                        </div>
-                      </>
-                    )}
+                    {/* User Timezone */}
+                    <div>
+                      <WatchLaterIcon />
+                      {account.timezone || "Undisclosed"}
+                    </div>
                   </div>
                 </div>
 
                 {/* Rating */}
-                <div className="user-rating">
-                  <div className="user-client-rating">
-                    <span className="rating-text">
-                      {account.rating > 0 ? (
-                        <>
-                          Rating: {account.rating} ({account.reviews})
-                        </>
-                      ) : (
-                        <>Rating: {account.rating || "No reviews"}</>
-                      )}
-                    </span>
+                <UserRating
+                  rating={account.rating}
+                  reviewCount={account.reviews}
+                />
 
-                    <div>
-                      <Rating
-                        name="read-only"
-                        value={account.rating}
-                        precision={0.1}
-                        readOnly
-                        size="medium"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="karma">
-                    {account.karma ? (
-                      <>Karma: {account.karma}</>
-                    ) : (
-                      <>Karma: 0</>
-                    )}
-                  </div>
-                </div>
+                {/* <div className="karma">Karma: {account.karma || 0}</div> */}
 
                 {/* Contact */}
                 <div className="contact">
-                  <div className="invite">
-                    <Fab
-                      variant="extended"
-                      style={{
-                        backgroundColor: "#FF0000",
-                        border: "none",
-                        borderRadius: "2px",
-                        color: "white",
-                        zIndex: 0,
-                      }}
-                    >
-                      <BiMessageSquareAdd /> <>&nbsp;</> Invite to Job
-                    </Fab>
-                    {/* <BiMessageSquareAdd /> <span>Invite to Job</span> */}
-                  </div>
-
-                  {/* <div className="report">
-                    <span>Report user</span>
-                  </div> */}
+                  <InviteToJob
+                    inviter={user.address}
+                    invitee={account.address}
+                  />
                 </div>
               </div>
             </div>
 
+            {/* Like Button */}
             <div className="profile-right-top-right">
               <div className="bookmark-user">
-                <Fab aria-label="like">
-                  <FaRegHeart />
-                </Fab>
+                <FaRegHeart />
               </div>
             </div>
           </div>
 
           <div className="profile-right-bottom">
+            {/* Jobs / Post Switcher */}
             <Box sx={{ width: "100%" }}>
               <Tabs
                 value={tabValue}
@@ -289,106 +184,19 @@ export default function FindWork() {
               </Tabs>
             </Box>
 
-            <Card sx={{ minWidth: "100%", borderRadius: "5px" }}>
-              <div className="completed-job">
-                <div className="job-title">
-                  <h5>Build a Smart Contract on Solana</h5>
-                </div>
+            <Review
+              jobTitle={"Build a Smart Contract on Solana"}
+              jobDate={"Jul 28, 2022 - August 14, 2022 "}
+              jobRating={5}
+              clientDisplayName={"DunderMiflin"}
+              reviewMessage={
+                "Lion0x54 did amazing work when building our smart contract!"
+              }
+              payRate={20}
+              payType={"Fixed Rate"}
+            />
 
-                <div className="job-date">
-                  <span>Jul 28, 2022 - August 14, 2022 </span>
-                </div>
-
-                <div className="job-review">
-                  <div className="client-review-message">
-                    <div>
-                      <Rating
-                        name="read-only"
-                        value={5}
-                        precision={0.5}
-                        readOnly
-                        size="small"
-                      />
-                    </div>
-
-                    <div>
-                      <Chip
-                        avatar={<Avatar alt="Natacha" src={defaultPfp} />}
-                        label="Jacob West"
-                        variant="outlined"
-                      />
-                    </div>
-
-                    <div>
-                      <i>
-                        Jason did amazing work when building our smart contract!
-                      </i>
-                    </div>
-                  </div>
-
-                  <div className="job-pay">
-                    <div className="job-rate">
-                      <span>20.3 SOL</span>
-                    </div>
-
-                    <div>
-                      <span>Fixed Rate</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card sx={{ minWidth: "100%", borderRadius: "5px" }}>
-              <div className="completed-job">
-                <div className="job-title">
-                  <h5>Create NFT Mint Site</h5>
-                </div>
-
-                <div className="job-date">
-                  <span>Jul 23, 2022 - August 02, 2022 </span>
-                </div>
-
-                <div className="job-review">
-                  <div className="client-review-message">
-                    <div>
-                      <Rating
-                        name="read-only"
-                        value={4.5}
-                        precision={0.5}
-                        readOnly
-                        size="small"
-                      />
-                    </div>
-
-                    <div>
-                      <Chip
-                        avatar={<Avatar alt="Natacha" src={defaultPfp} />}
-                        label="Jacob West"
-                        variant="outlined"
-                      />
-                    </div>
-
-                    <div>
-                      <i>
-                        Jason did amazing work when building our NFT minting
-                        site!
-                      </i>
-                    </div>
-                  </div>
-
-                  <div className="job-pay">
-                    <div className="job-rate">
-                      <span>12.1 SOL</span>
-                    </div>
-
-                    <div>
-                      <span>Fixed Rate</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
+            {/* End Recent Jobs */}
           </div>
         </div>
       </div>
